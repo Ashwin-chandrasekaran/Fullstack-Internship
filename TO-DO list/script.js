@@ -2,7 +2,7 @@ const todoInput=document.querySelector(".todo-input");
 const todoButton=document.querySelector(".todo-button");
 const todoList=document.querySelector(".todo-list");
 const todoStatus=document.querySelector(".status");
-// const edit=document.querySelector(".edit-button");
+
 
 let listtodo;
 let todos;
@@ -10,28 +10,31 @@ let todos;
 document.addEventListener('DOMContentLoaded', displayPrevious);
 todoButton.addEventListener('click',addlist);
 todoList.addEventListener('click', checkForButton);
-todoStatus.addEventListener("click", showfilter);
-// edit.addEventListener('click',editList);
-// window.addEventListener("DOMContentLoaded", (event) => {
-//     const edit = document.querySelector('.edit-button');
-//     if (edit) {
-//       edit.addEventListener('click', editList);
-//     }
-// });
+todoStatus.addEventListener('change', showfilter);
 function addlist(event){
     event.preventDefault();
-    if(todoInput.value===""){
-        const popup=document.createElement("div");
-        popup.classList.add("pop-up");
-        popup.innerHTML="invalid input";
+    if(todoInput.value.length==0){
+        const popupBox = document.createElement("div");
+        popupBox.innerText = "Not valid";
+        popupBox.classList.add("popup-box");
+        document.body.appendChild(popupBox);
+        setTimeout(() => {
+            popupBox.remove();
+        }, 2000);
+        return;
+    }
+    if(todoInput.value.length>20){
+        var truncated=todoInput.value.substring(0,50) + "...";
     }else{
+        truncated=todoInput.value;
+    }
         todos=document.createElement("div");
         todos.classList.add("todos-div");
         listtodo=document.createElement("li");
-        listtodo.innerText=todoInput.value;
+        listtodo.innerText=truncated;
         listtodo.classList.add("list-todo");
         todos.appendChild(listtodo);
-        createlocalStorage(todoInput.value);
+        createlocalStorage(truncated);
         const completeButton=document.createElement("button");
         completeButton.innerHTML='<i class="fas fa-check"></i>'
         completeButton.classList.add("complete-button");
@@ -45,56 +48,42 @@ function addlist(event){
         todos.appendChild(deleteButton);
         todos.appendChild(editButton);
         todoList.appendChild(todos);
-        todoInput.value="";
-    }
+        tippy(listtodo, {
+            content: truncated, // change todoInput.value to truncated
+            placement: "bottom",
+            width: "auto",
+            maxWidth: 2000,
+            onShow: (instance) => {
+              const todoText = instance.reference.innerText;
+              instance.setContent(todoText);
+            },
+            onHide: (instance) => {
+              instance.setContent(truncated); // change todoInput.value to truncated
+            },
+          });
+          todoInput.value = "";
+        //   filterTodos();
+        }
 
-}
-// var edit=document.querySelector(".edit-button");
-// edit.addEventListener('click',editList);
 
 function checkForButton(event){
     const chooseButton=event.target;
     if(chooseButton.classList[0]==="delete-button"){
-        // chooseButton.parentElement.classList.add("rotate");
-        // chooseButton.addEventListener('transitionend', ()=>{
-        //     chooseButton.parentElement.remove();
-        // });
         deletefromlocalstrorage(chooseButton.parentElement);
         chooseButton.parentElement.remove();
+        todoStatus.children[0].innerHTML;
+        
     }
     else if(chooseButton.classList[0]==="complete-button"){
         chooseButton.parentElement.classList.toggle("complete");
-    }else if(chooseButton.classList[0]==="edit-button"){
-        const editing=chooseButton.parentElement.parentElement.getElementsByTagName("li");
-        const editing1=editing[0].innerHTML;
+    }else if(chooseButton.classList[0]=== "edit-button" && !chooseButton.classList.contains("complete")){
+        // console.log(1);
         editList(chooseButton);
     }
+    // filterTodos();
 }
-function showfilter(evevnt){
-    const todos=todoList.getElementsByTagName("div");
-    var inputList = Array.prototype.slice.call(todos);
-    console.log(inputList);
-    inputList.forEach(function(todo){
-        switch(event.target.value){
-            case "all":
-                todo.style.display="flex";
-                break;
-            case "complete":
-                if(todo.classList.contains("complete")){
-                    todo.style.display="flex";
-                }else{
-                    todo.style.display="none";
-                }
-                break;
-            case "incomplete":
-                if(!todo.classList.contains("complete")){
-                    todo.style.display="flex";
-                }else{
-                    todo.style.display="none";
-                }
-                break;
-        }
-    });
+function showfilter(event){
+    filterTodos();
 }
 function createlocalStorage(todo){
     let todos;
@@ -150,22 +139,47 @@ function deletefromlocalstrorage(todo){
     todos.splice(todos.indexOf(todotext),1);
     localStorage.setItem("todos",JSON.stringify(todos));
 }
-function editList(event){
-    const input1=event.parentElement.getElementsByTagName("li")[0].innerHTML;
-    todoInput.value=input1;
-    event.parentElement.remove();
-    // deletefromlocalstrorageedit(event.parentElement);
+function editList(event) {
+    const parentElement = event.parentElement;
+    if (parentElement.classList.contains("complete")) {
+      // if the parent element has the "complete" class, editing should not be allowed
+      return;
+    }
+    const input1 = parentElement.getElementsByTagName("li")[0].innerHTML;
+    todoInput.value = input1;
+    parentElement.remove();
+  }
 
+  function showfilter(event){
+    const filterOption = event.target.value;
+    const todos=todoList.getElementsByTagName("div");
+    var inputList = Array.from(todos);
+    inputList.forEach(function(todo){
+        switch(filterOption){
+            case "all":
+                todo.style.display="flex";
+                break;
+            case "complete":
+                if(todo.classList.contains("complete")){
+                    todo.style.display="flex";
+                }else{
+                    todo.style.display="none";
+                }
+                break;
+            case "incomplete":
+                if(!todo.classList.contains("complete")){
+                    todo.style.display="flex";
+                }else{
+                    todo.style.display="none";
+                }
+                break;
+        }
+    });
 }
-// function deletefromlocalstrorageedit(todo){
-//     let todos;
-//     if(localStorage.getItem("todos")===null){
-//         todos=[];
-//     }else{
-//         todos=JSON.parse(localStorage.getItem("todos"));
-//     }
-//     localStorage.setItem("todos",JSON.stringify(todos));
-//     const todotext=todo[0].innerText;
-//     todos.splice(todos.indexOf(todotext),1);
-//     localStorage.setItem("todos",JSON.stringify(todos));
-// }
+
+
+
+
+
+
+

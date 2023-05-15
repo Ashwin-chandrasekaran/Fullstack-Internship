@@ -124,13 +124,22 @@ select{
     width: 45px;
     cursor: pointer;
 }
+.tippy-content {
+    max-width: 500px;
+    max-height: 2000px;
+    overflow: auto;
+  }
+  .tippy-box {
+    font-size: 16px; /* Adjust this value as needed */
+    line-height: 1.5; /* Adjust this value as needed */
+  }
 /* form input {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 200px;
   } */
-  .list-todo {
+  /* .list-todo {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -138,14 +147,26 @@ select{
   }
   .list-todo:hover{
     /* display: flex; */
-    overflow: visible; 
+    /* overflow: visible; 
     white-space: normal;
-    max-width: 500px; 
-}
-.pop-up{
+    max-width: 500px;  */ 
+/* } */
+/* .pop-up{
     width: 50px;
     height: 50px;
     background-color: black;
     margin: 0;
     position: absolute;
-}
+} */
+/* .popup-box {
+    background-color: black;
+    color: white;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .popup-box {
+    display: none;
+  } */
+  
+
