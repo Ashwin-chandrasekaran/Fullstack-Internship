@@ -13,7 +13,8 @@ todoList.addEventListener('click', checkForButton);
 todoStatus.addEventListener('change', showfilter);
 function addlist(event){
     event.preventDefault();
-    if(todoInput.value.length==0){
+    let pattern = /[a-zA-Z0-9]/;
+    if(todoInput.value.length==0 || !pattern.test(todoInput.value)){
         const popupBox = document.createElement("div");
         popupBox.innerText = "Not valid";
         popupBox.classList.add("popup-box");
@@ -23,8 +24,9 @@ function addlist(event){
         }, 2000);
         return;
     }
-    if(todoInput.value.length>20){
-        var truncated=todoInput.value.substring(0,50) + "...";
+    todoInput.value=todoInput.value.toLowerCase();
+    if(todoInput.value.length>=36){
+        var truncated=todoInput.value.substring(0,36) + "...";
     }else{
         truncated=todoInput.value;
     }
@@ -33,6 +35,7 @@ function addlist(event){
         listtodo=document.createElement("li");
         listtodo.innerText=truncated;
         listtodo.classList.add("list-todo");
+        listtodo.setAttribute('title', todoInput.value);
         todos.appendChild(listtodo);
         createlocalStorage(truncated);
         const completeButton=document.createElement("button");
@@ -47,22 +50,18 @@ function addlist(event){
         editButton.classList.add("edit-button");
         todos.appendChild(deleteButton);
         todos.appendChild(editButton);
-        todoList.appendChild(todos);
-        tippy(listtodo, {
-            content: truncated, // change todoInput.value to truncated
-            placement: "bottom",
-            width: "auto",
-            maxWidth: 2000,
-            onShow: (instance) => {
-              const todoText = instance.reference.innerText;
-              instance.setContent(todoText);
-            },
-            onHide: (instance) => {
-              instance.setContent(truncated); // change todoInput.value to truncated
-            },
-          });
+        if(todoStatus.value==="all" || todoStatus.value === "incomplete"){
+            todoList.appendChild(todos);
+        }
+        todoInput.value = "";
+        showfilter();
+        if (todoStatus.value === "incomplete") {
+            const noTasksMessage = document.querySelector(".no-tasks-message");
+            if (noTasksMessage) {
+              noTasksMessage.remove();
+            }
+          }
           todoInput.value = "";
-        //   filterTodos();
         }
 
 
@@ -75,12 +74,12 @@ function checkForButton(event){
         
     }
     else if(chooseButton.classList[0]==="complete-button"){
+        const parentDiv = chooseButton.parentElement;
         chooseButton.parentElement.classList.toggle("complete");
+        updateCompletionStatus(parentDiv);
     }else if(chooseButton.classList[0]=== "edit-button" && !chooseButton.classList.contains("complete")){
-        // console.log(1);
         editList(chooseButton);
     }
-    // filterTodos();
 }
 function showfilter(event){
     filterTodos();
@@ -92,41 +91,64 @@ function createlocalStorage(todo){
     }else{
         todos=JSON.parse(localStorage.getItem("todos"));
     }
-    todos.push(todo);
-    localStorage.setItem("todos",JSON.stringify(todos));
+    const todoItem = {
+        todo: todo,
+        completed: false // Set the initial status as false (not completed)
+      };
+      
+      todos.push(todoItem);
+      localStorage.setItem("todos", JSON.stringify(todos));
 
 }
-function displayPrevious(){
+function displayPrevious() {
     let todos;
-    if(localStorage.getItem("todos")===null){
-        todos=[];
-    }else{
-        todos=JSON.parse(localStorage.getItem("todos"));
+    if (localStorage.getItem("todos") === null) {
+      todos = [];
+    } else {
+      todos = JSON.parse(localStorage.getItem("todos"));
     }
-    localStorage.setItem("todos",JSON.stringify(todos));
-    todos.forEach(function(todo){
-        const todos1=document.createElement("div");
-        todos1.classList.add("todos-div");
-        const listtodo=document.createElement("li");
-        listtodo.innerText=todo
-        listtodo.classList.add("list-todo");
-        todos1.appendChild(listtodo);
-        const completeButton=document.createElement("button");
-        completeButton.innerHTML='<i class="fas fa-check"></i>'
-        completeButton.classList.add("complete-button");
-        todos1.appendChild(completeButton);
-        const deleteButton=document.createElement("button");
-        deleteButton.innerHTML='<i class="fas fa-trash"></i>'
-        deleteButton.classList.add("delete-button");
-        const editButton=document.createElement("button");
-        editButton.innerHTML='<i class="fa fa-edit"></i>';
-        editButton.classList.add("edit-button");
-        todos1.appendChild(deleteButton);
-        todos1.appendChild(editButton);
+  
+    todoList.innerHTML = ""; // Clear the current list
+  
+    todos.forEach(function (todo) {
+      const todos1 = document.createElement("div");
+      todos1.classList.add("todos-div");
+      const listtodo = document.createElement("li");
+      listtodo.innerText = todo.todo;
+      listtodo.classList.add("list-todo");
+      listtodo.setAttribute("title", todo.todo);
+      todos1.appendChild(listtodo);
+  
+      // Check if the task is completed and add the corresponding class
+      if (todo.completed) {
+        todos1.classList.add("complete");
+      }
+  
+      const completeButton = document.createElement("button");
+      completeButton.innerHTML = '<i class="fas fa-check"></i>';
+      completeButton.classList.add("complete-button");
+      todos1.appendChild(completeButton);
+  
+      const deleteButton = document.createElement("button");
+      deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+      deleteButton.classList.add("delete-button");
+  
+      const editButton = document.createElement("button");
+      editButton.innerHTML = '<i class="fa fa-edit"></i>';
+      editButton.classList.add("edit-button");
+  
+      todos1.appendChild(deleteButton);
+      todos1.appendChild(editButton);
+  
+      if (todoStatus.value === "all") {
         todoList.appendChild(todos1);
-    })
-
-}
+      } else if (todoStatus.value === "complete" && todo.completed) {
+        todoList.appendChild(todos1);
+      } else if (todoStatus.value === "incomplete" && !todo.completed) {
+        todoList.appendChild(todos1);
+      }
+    });
+  }
 function deletefromlocalstrorage(todo){
     let todos;
     if(localStorage.getItem("todos")===null){
@@ -145,41 +167,82 @@ function editList(event) {
       // if the parent element has the "complete" class, editing should not be allowed
       return;
     }
-    const input1 = parentElement.getElementsByTagName("li")[0].innerHTML;
+    const input1 = parentElement.getElementsByTagName("li")[0].getAttribute("title");
     todoInput.value = input1;
     parentElement.remove();
   }
 
-  function showfilter(event){
+  function showfilter(event) {
     const filterOption = event.target.value;
-    const todos=todoList.getElementsByTagName("div");
-    var inputList = Array.from(todos);
-    inputList.forEach(function(todo){
-        switch(filterOption){
-            case "all":
-                todo.style.display="flex";
-                break;
-            case "complete":
-                if(todo.classList.contains("complete")){
-                    todo.style.display="flex";
-                }else{
-                    todo.style.display="none";
-                }
-                break;
-            case "incomplete":
-                if(!todo.classList.contains("complete")){
-                    todo.style.display="flex";
-                }else{
-                    todo.style.display="none";
-                }
-                break;
-        }
+    const todos = JSON.parse(localStorage.getItem("todos"));
+    todoList.innerHTML = ""; 
+  
+    todos.forEach(function (todo) {
+      const todos1 = document.createElement("div");
+      todos1.classList.add("todos-div");
+      const listtodo = document.createElement("li");
+      listtodo.innerText = todo.todo;
+      listtodo.classList.add("list-todo");
+      listtodo.setAttribute("title", todo.todo);
+      todos1.appendChild(listtodo);
+  
+      if (todo.completed) {
+        todos1.classList.add("complete");
+      }
+  
+      const completeButton = document.createElement("button");
+      completeButton.innerHTML = '<i class="fas fa-check"></i>';
+      completeButton.classList.add("complete-button");
+      todos1.appendChild(completeButton);
+  
+      const deleteButton = document.createElement("button");
+      deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+      deleteButton.classList.add("delete-button");
+  
+      const editButton = document.createElement("button");
+      editButton.innerHTML = '<i class="fa fa-edit"></i>';
+      editButton.classList.add("edit-button");
+  
+      todos1.appendChild(deleteButton);
+      todos1.appendChild(editButton);
+  
+      // Check the filter option to decide whether to display the task
+      if (filterOption === "all") {
+        todoList.appendChild(todos1);
+      } else if (filterOption === "complete" && todo.completed) {
+        todoList.appendChild(todos1);
+      } else if (filterOption === "incomplete" && !todo.completed) {
+        todoList.appendChild(todos1);
+      }
     });
-}
-
-
-
-
-
-
-
+  
+    if (filterOption === "complete" && todoList.innerHTML === "") {
+      displayNoTasksMessage("No completed tasks");
+    } else if (filterOption === "incomplete" && todoList.innerHTML === "") {
+      displayNoTasksMessage("No incomplete tasks");
+    }
+    // if (noTasksMessage) {
+    //     noTasksMessage.remove();
+    //   }
+  }
+  
+function updateCompletionStatus(todoItem) {
+    const todos = JSON.parse(localStorage.getItem("todos"));
+    const todoText = todoItem.querySelector(".list-todo").innerText;
+  
+    // Find the corresponding todo item in the array
+    const updatedTodos = todos.map(function (item) {
+      if (item.todo === todoText) {
+        item.completed = todoItem.classList.contains("complete");
+      }
+      return item;
+    });
+  
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
+  }
+  function displayNoTasksMessage(message) {
+    const noTasksMessage = document.createElement("div");
+    noTasksMessage.innerText = message;
+    noTasksMessage.classList.add("no-tasks-message");
+    todoList.appendChild(noTasksMessage);
+  }

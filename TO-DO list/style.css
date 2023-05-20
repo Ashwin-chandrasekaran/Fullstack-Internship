@@ -48,7 +48,7 @@ form button:hover{
 
 }
 .todo-list{
-    min-width: 30%;
+    min-width: 40%;
     list-style: none;
 }
 .todos-div{
@@ -59,6 +59,7 @@ form button:hover{
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 600px;
 }
 .todos-div li{
     flex: 1;
@@ -158,15 +159,21 @@ select{
     margin: 0;
     position: absolute;
 } */
-/* .popup-box {
+/* /* .popup-box {
     background-color: black;
     color: white;
     padding: 10px;
     text-align: center;
-  }
-  
-  .popup-box {
-    display: none;
   } */
+  
+  /* .popup-box {
+    display: none;
+  }  */
+
+.popup-box{
+    position: absolute;
+    top: 0;
+    left: 50%;
+}
   
 
