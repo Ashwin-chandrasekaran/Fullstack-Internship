@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div class="row justify-content-center">
+        <h1 class="col-7 text-center mt-2">Crypto Tracker</h1>
+        <h4 class="col-7 text-center mt-2">By GammaPrep</h4>
+        <div class="col-md-6  row justify-content-center main fix" id="allContaint">
+           <div class="col-10">
+            <form action="" id="searchform">
+                <div class="form-row">
+                    <div class="col-12 form-group">
+                        <label for="coin">
+                            <span style="font-weight: 700;">Coin type</span>
+                        </label>
+                        <select class="form-control" name="cointype" id="coin">
+                            <option value="bitcoin">Bitcoin</option>
+                            <option value="dogecoin">Dogecoin</option>
+                            <option value="ethereum">Ethereum</option>
+                            <option value="polkadot">Polkadot</option>
+                            <option value="tether">Tether</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="col-12 btn btn-primary">Get Price</button>
+                
+            </form>
+           </div>
+        </div>
+        <div class="col-md-7 text-center row justify-content-center  align-items-center" id="result" style="margin-top:100px;">
+            <table class="p-4 col-md-7" border="1px" style="background-color: white; font-weight: 700;" id="resTable">
+            </table>
+        </div>
+        
+    </div>
+    
+    
+    <script src="app.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+</body>
+</html>
