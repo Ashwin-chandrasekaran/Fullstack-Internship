@@ -1,0 +1,75 @@
+body {
+    text-align: center;
+    font-size: 24px;
+  }
+  img{
+    height: 50px;
+    width: 50px;
+  }
+  .toggle-button {
+    position: relative;
+    display: inline-block;
+    width: 200px;
+    height: 50px;
+    background-color: black;
+    border-radius: 25px;
+    cursor: pointer;
+    overflow: hidden;
+  }
+  
+  .circle {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 44px;
+    height: 44px;
+    background-color: #2BCA91; /* Updated circle color */
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+  }
+  
+  .clock-in .circle {
+    transform: translateX(150px);
+  }
+  
+  .clock-out .circle {
+    transform: translateX(0);
+  }
+  
+  .toggle-button-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+  }
+  
+  .clock-in .toggle-button-text {
+    transform: translateX(-50px);
+  }
+  
+  .clock-out .toggle-button-text {
+    transform: translateX(0);
+  }
+  
+  
+  #timer {
+    font-size: 48px;
+    margin: 20px 0;
+  }
+  
+  #intervals {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+  
+  #totalDuration {
+    font-size: 24px;
+    font-weight: bold;
+  }
