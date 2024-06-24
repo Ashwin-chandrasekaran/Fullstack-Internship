@@ -1,0 +1,17 @@
+{
+  "name": "simple-todo",
+  "version": "1.0.0",
+  "description": "A simple todo list for everyone",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ashwin",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.4.0",
+    "zod": "^3.23.8"
+  }
+}
