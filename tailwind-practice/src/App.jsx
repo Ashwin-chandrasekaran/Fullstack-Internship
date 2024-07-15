@@ -1,13 +1,10 @@
 import React from "react"
+import {Revenuecard} from "./components/Revenuecard"
 export default function App(){
   return(
-    <>
-    <div className="grid grid-cols-1 md:grid-cols-3" >
-      <div className="bg-red-500">hi there</div>
-      <div className="bg-green-500">hi there</div>
-      <div className="bg-yellow-500">hi there</div>
+    <div className="grid grid-cols-4">
+      <Revenuecard 
+        title={"Amount Pending"} amount={"₹92,312.20"} ordercount={13}/>
     </div>
-    
-  </>
   )
 }
