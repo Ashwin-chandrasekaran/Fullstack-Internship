@@ -16,23 +16,23 @@ router.post("/sign-up",async(req,res)=>{
         })
         return
     }
-    const existinguser=await User.findOne({
+    const existingadmin=await Admin.findOne({
         username:req.body.username
     })
-    if(existinguser){
+    if(existingadmin){
         res.status(401).json({
             msg:"user already exists"
         })
         return
     }
-    const user=await User.create({
+    const admin=await Admin.create({
         username:req.body.username,
         firstname:req.body.firstname,
         lastname:req.body.lastname,
         password:req.body.password
     })
     res.status(200).json({
-        msg:"user created successfully"
+        msg:"admin created successfully"
     })
 })
 router.post("/sign-in",async(req,res)=>{
@@ -44,18 +44,18 @@ router.post("/sign-in",async(req,res)=>{
         })
         return
     }
-    const user=await User.findOne({
+    const admin=await Admin.findOne({
         username:req.body.username,
         password:req.body.password
     })
-    if(!user){
+    if(!admin){
         res.status(401).json({
             msg:"invalid username or password"
         })
         return
     }
     const token=jwt.sign({
-        userId:user._id
+        userId:admin._id
     },JWT_SECRET)
     res.status(200).json({
         token:token
@@ -70,7 +70,7 @@ router.put("/",authmiddleware,async(req,res)=>{
         })
         return
     }
-    await User.updateOne({_id:req.userId},payload)
+    await Admin.updateOne({_id:req.userId},payload)
     res.status(200).json({
         msg:"updated successfully"
     })

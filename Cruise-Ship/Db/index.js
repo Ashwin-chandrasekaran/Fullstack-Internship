@@ -1,0 +1,70 @@
+const mongoose=require("mongoose")
+mongoose.connect("mongodb+srv://ashwin8248:Ashwin007%23@nodeexpresscourse.izryu5r.mongodb.net/cruise-ship")
+const UserSchema=new mongoose.Schema({
+    username:{
+        type:String,
+        unique:true,
+        maxLength:30,
+        minLength:3,
+        required:true,
+        trim:true,
+        lowercase:true
+    },
+    firstname:{
+        type:String,
+        maxLength:30,
+        minLength:3,
+        required:true,
+        trim:true
+    },
+    lastname:{
+        type:String,
+        maxLength:30,
+        minLength:3,
+        required:true,
+        trim:true
+    },
+    password:{
+        type:String,
+        maxLength:30,
+        minLength:6,
+        required:true,
+    }
+})
+const adminSchema=new mongoose.Schema({
+    username:{
+        type:String,
+        unique:true,
+        maxLength:30,
+        minLength:3,
+        required:true,
+        trim:true,
+        lowercase:true
+    },
+    firstname:{
+        type:String,
+        maxLength:30,
+        minLength:3,
+        required:true,
+        trim:true
+    },
+    lastname:{
+        type:String,
+        maxLength:30,
+        minLength:3,
+        required:true,
+        trim:true
+    },
+    password:{
+        type:String,
+        maxLength:30,
+        minLength:6,
+        required:true,
+    }
+})
+const User=mongoose.model('User',UserSchema)
+const Admin=mongoose.model('Admin',adminSchema)
+module.exports={
+    User,
+    Admin
+}
